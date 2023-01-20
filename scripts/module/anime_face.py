@@ -4,7 +4,6 @@ import os
 image_exts = [".png",".jpg",".jpeg"]
 
 class AnimeFaceDetector:
-    
     def __init__(self,padding,detection_output=False):
         # processing arguments
         self.padding=padding
