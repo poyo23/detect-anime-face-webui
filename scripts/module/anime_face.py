@@ -62,7 +62,6 @@ class AnimeFaceDetector:
 def detect(input_directory,output_directory,debug_output_directory,padding,detection_output):
     afd = AnimeFaceDetector(padding,detection_output=detection_output)
 
-
     os.makedirs(output_directory,exist_ok=True)
     if debug_output_directory == None or debug_output_directory == "":
         debug_output_directory = output_directory
