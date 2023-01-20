@@ -16,13 +16,14 @@ def daf_tab():
             padding = gr.Slider(label="padding", minimum=0, maximum=520, step=1, value=20)
             input_directory = gr.Text(label="Input directory")
             output_directory = gr.Text(label="Output directory")
+            debug_output_directory = gr.Text(label="Output Detection Results Directory")
             with gr.Row():
                 chk_detection_results = gr.Checkbox(label="Output Detection Results", value=False)
             
         detect_button.click(
             fn=detect,
             # _js="ProgressUpdate",
-            inputs=[input_directory, output_directory,padding,chk_detection_results],
+            inputs=[input_directory, output_directory,debug_output_directory,padding,chk_detection_results],
             outputs=[output_html],
             show_progress = True,
         )

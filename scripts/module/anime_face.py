@@ -31,7 +31,7 @@ class AnimeFaceDetector:
         _crop_img = cv_img[top:bottom,left:right]
         return _crop_img,crop_area
     
-    def detect(self,image_path,output_directory):
+    def detect(self,image_path,output_directory,debug_output_directory):
         filename,fileext = os.path.splitext(os.path.basename(image_path))
         image = cv2.imread(image_path, cv2.IMREAD_COLOR)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -53,16 +53,25 @@ class AnimeFaceDetector:
                 cv2.rectangle(detect_image, (x, y), (bottom_x, left_y), (0, 0, 255), 2)
                 
         if self.detection_output:
-            output_path = os.path.join(output_directory,f"{filename}-rect{fileext}")
+            output_path = os.path.join(debug_output_directory,f"{filename}-rect{fileext}")
             cv2.imwrite(output_path, detect_image)
+
+        return len(faces) == 0
     
 
     
-def detect(input_directory,output_directory,padding,detection_output):
+def detect(input_directory,output_directory,debug_output_directory,padding,detection_output):
+    if debug_output_directory == None or debug_output_directory == "":
+        debug_output_directory = output_directory
     afd = AnimeFaceDetector(padding,detection_output=detection_output)
     os.makedirs(output_directory,exist_ok=True)
     image_path_list = [os.path.join(input_directory,f) for f in os.listdir(input_directory) if any([f.endswith(ext) for ext in image_exts])]
+    undetect_images = []
     for image_path in image_path_list:
-        afd.detect(image_path,output_directory)
+        _detect = afd.detect(image_path,output_directory,debug_output_directory)
+        if not _detect:
+            undetect_images.append(image_path)
         
-    return "Finish"
+    results_text = "Face is not dound in imgaes:\n" + "\n".join(undetect_images)
+    return results_text
+
