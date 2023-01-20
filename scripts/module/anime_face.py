@@ -60,7 +60,6 @@ class AnimeFaceDetector:
 
     
 def detect(input_directory,output_directory,debug_output_directory,padding,detection_output):
-
     afd = AnimeFaceDetector(padding,detection_output=detection_output)
 
 
