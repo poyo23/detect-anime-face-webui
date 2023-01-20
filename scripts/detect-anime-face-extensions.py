@@ -8,9 +8,11 @@ from scripts.module.anime_face import detect
 
 def daf_tab():
     with gr.Blocks() as main_block:
-        with gr.Column():
-            output_html = gr.HTML(elem_id=f'output_text')
-            # progress_bar = gr.HTML(elem_id=f'progress_bar')
+
+        # progress bar
+#        with gr.Column():
+#             progress_bar = gr.HTML(elem_id=f'progress_bar')
+
         with gr.Column():
             detect_button = gr.Button(value="Detect!", variant="primary")
             padding = gr.Slider(label="padding", minimum=0, maximum=520, step=1, value=20)
@@ -19,6 +21,9 @@ def daf_tab():
             debug_output_directory = gr.Text(label="Output Detection Results Directory")
             with gr.Row():
                 chk_detection_results = gr.Checkbox(label="Output Detection Results", value=False)
+        with gr.Column():
+            output_html = gr.HTML(elem_id=f'output_text')
+            # progress_bar = gr.HTML(elem_id=f'progress_bar')
             
         detect_button.click(
             fn=detect,

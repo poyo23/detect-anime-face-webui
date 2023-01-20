@@ -72,6 +72,6 @@ def detect(input_directory,output_directory,debug_output_directory,padding,detec
         if not _detect:
             undetect_images.append(image_path)
         
-    results_text = "Face is not dound in imgaes:\n" + "\n".join(undetect_images)
+    results_text = "Face is not dound in imgaes:<br/>" + "<br/>".join(undetect_images)
     return results_text
 
