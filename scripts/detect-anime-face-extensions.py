@@ -19,6 +19,16 @@ def daf_tab():
             input_directory = gr.Text(label="Input directory")
             output_directory = gr.Text(label="Output directory")
             debug_output_directory = gr.Text(label="Output Detection Results Directory")
+            gr.HTML(value="分からない場合はデフォルトのvalueのままでOK")
+
+
+            with gr.Row():
+                with gr.Column():
+                    gr.HTML(value="scaleFactorは値が大きいほど高速化されますが、一部の顔を見落とします。1.05がかなりの精度で顔を検出できますが、速度は遅いです。")
+                    sclae_factor = gr.Slider(1.0, 1.4, value=1.1,step=0.01,label="scaleFactor")
+                with gr.Column():
+                    gr.HTML(value="minNeigborsは検出された顔の品質に影響します。値が大きいほど検出数は少なくなりますが、品質は高くなります。3~6が妥当な値です。")
+                    min_neighbors = gr.Slider(1, 10, value=5,step=1,label="minNeigbors")
             with gr.Row():
                 chk_detection_results = gr.Checkbox(label="Output Detection Results", value=False)
         with gr.Column():
@@ -28,7 +38,7 @@ def daf_tab():
         detect_button.click(
             fn=detect,
             # _js="ProgressUpdate",
-            inputs=[input_directory, output_directory,debug_output_directory,padding,chk_detection_results],
+            inputs=[input_directory, output_directory,debug_output_directory,padding,chk_detection_results,sclae_factor,min_neighbors],
             outputs=[output_html],
             show_progress = True,
         )

@@ -4,10 +4,12 @@ import os
 image_exts = [".png",".jpg",".jpeg"]
 
 class AnimeFaceDetector:
-    def __init__(self,padding,detection_output=False):
+    def __init__(self,padding,sclae_factor=1.1,min_neighbors=5,detection_output=False):
         # processing arguments
         self.padding=padding
         self.detection_output=detection_output # debug option
+        self.sclae_factor = sclae_factor
+        self.min_neighbors = min_neighbors
         
         extension_dir = os.path.dirname(__file__) # このファイルのディレクトリを参照する。
         # loading cascade
@@ -15,6 +17,7 @@ class AnimeFaceDetector:
         cascade_path = os.path.join(extension_dir,cascade_file)
         assert os.path.isfile(cascade_path), f"{cascade_path} is not found!"
         self.cascade = cv2.CascadeClassifier(cascade_path)
+
     
     def __crop(self,cv_img,face_area,padding):
         max_width = cv_img.shape[0]
@@ -37,8 +40,8 @@ class AnimeFaceDetector:
         gray = cv2.equalizeHist(gray)
         faces = self.cascade.detectMultiScale(gray,
                                      # detector options
-                                     scaleFactor = 1.1,
-                                     minNeighbors = 5,
+                                     scaleFactor = self.sclae_factor,
+                                     minNeighbors = self.min_neighbors,
                                      minSize = (24, 24))
         if self.detection_output:
             detect_image = image.copy()
@@ -59,8 +62,10 @@ class AnimeFaceDetector:
     
 
     
-def detect(input_directory,output_directory,debug_output_directory,padding,detection_output):
-    afd = AnimeFaceDetector(padding,detection_output=detection_output)
+def detect(input_directory,output_directory,debug_output_directory,
+           padding,detection_output,
+           sclae_factor,min_neighbors):
+    afd = AnimeFaceDetector(padding,sclae_factor=sclae_factor,min_neighbors=min_neighbors,detection_output=detection_output)
 
     os.makedirs(output_directory,exist_ok=True)
     if debug_output_directory == None or debug_output_directory == "":
