@@ -23,7 +23,7 @@ def daf_tab():
             gr.HTML(value="分からない場合はデフォルトのvalueのままでOK")
             with gr.Row():
                 with gr.Column():
-                    gr.HTML(value="scaleFactorは値が大きいほど高速化されますが、一部の顔を見落とします。1.05がかなりの精度で顔を検出できますが、速度は遅いです。")
+                    gr.HTML(value="scaleFactorは値が大きいほど高速化されますが、一部の顔を見落とします。1.05でほとんどの顔を検出できますが、速度は遅くなります。")
                     sclae_factor = gr.Slider(1.0, 1.4, value=1.1,step=0.01,label="scaleFactor")
                 with gr.Column():
                     gr.HTML(value="minNeigborsは検出された顔の品質に影響します。値が大きいほど検出数は少なくなりますが、品質は高くなります。3~6が妥当な値です。")
