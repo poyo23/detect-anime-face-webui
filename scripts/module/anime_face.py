@@ -20,8 +20,8 @@ class AnimeFaceDetector:
 
     
     def __crop(self,cv_img,face_area,padding):
-        max_width = cv_img.shape[0]
-        max_height = cv_img.shape[1]
+        max_width = cv_img.shape[1]
+        max_height = cv_img.shape[0]
         x, y, w, h = face_area
         bottom,top,right,left = y+h+padding+1,y-padding,x+w+padding+1,x-padding
         

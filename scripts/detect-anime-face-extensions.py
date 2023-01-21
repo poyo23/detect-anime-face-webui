@@ -19,9 +19,8 @@ def daf_tab():
             input_directory = gr.Text(label="Input directory")
             output_directory = gr.Text(label="Output directory")
             debug_output_directory = gr.Text(label="Output Detection Results Directory")
+
             gr.HTML(value="分からない場合はデフォルトのvalueのままでOK")
-
-
             with gr.Row():
                 with gr.Column():
                     gr.HTML(value="scaleFactorは値が大きいほど高速化されますが、一部の顔を見落とします。1.05がかなりの精度で顔を検出できますが、速度は遅いです。")
