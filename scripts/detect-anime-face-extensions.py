@@ -19,6 +19,14 @@ def daf_tab():
             with gr.Row():
                 enable_pad_ratio = gr.Checkbox(label="Enable padding ratio", value=False)
                 padding_ratio = gr.Slider(0.0, 5.0, value=0.5,step=0.01,label="paddingRatio")
+
+            gr.HTML(value="y軸方向の修正ができます。基本的に髪の毛を入れようとpaddingを大きくすると肩までクロップされるので避けたい場合に使います。上方向にずらしたい場合にはマイナスを指定します。")
+            y_offset = gr.Slider(label="Offset y axis", minimum=-520, maximum=520, step=1, value=0)
+            with gr.Row():
+                enable_y_offset_ratio = gr.Checkbox(label="Enable ratio (offset y axis)", value=False)
+                y_offset_ratio = gr.Slider(-2.0, 2.0, value=0.0,step=0.01,label="offsetRatio_Y")
+
+
             input_directory = gr.Text(label="Input directory")
             output_directory = gr.Text(label="Output directory")
             debug_output_directory = gr.Text(label="Output Detection Results Directory")
@@ -42,6 +50,7 @@ def daf_tab():
             # _js="ProgressUpdate",
             inputs=[input_directory, output_directory,debug_output_directory,
                     padding,enable_pad_ratio,padding_ratio,
+                    y_offset, enable_y_offset_ratio, y_offset_ratio,
                     chk_detection_results,
                     sclae_factor,min_neighbors],
             outputs=[output_html],

@@ -4,11 +4,20 @@ import os
 image_exts = [".png",".jpg",".jpeg"]
 
 class AnimeFaceDetector:
-    def __init__(self,padding,enable_padding_ratio,padding_ratio,sclae_factor=1.1,min_neighbors=5,detection_output=False):
+    def __init__(self,
+                 padding,enable_padding_ratio,padding_ratio,
+                 y_offset, enable_y_offset_ratio, y_offset_ratio,
+                 sclae_factor=1.1,min_neighbors=5,detection_output=False):
         # processing arguments
         self.padding=padding
         self.enable_padding_ratio = enable_padding_ratio
         self.padding_ratio = padding_ratio
+
+        self.y_offset = y_offset
+        self.enable_y_offset_ratio = enable_y_offset_ratio
+        self.y_offset_ratio = y_offset_ratio
+
+
         self.detection_output=detection_output # debug option
         self.sclae_factor = sclae_factor
         self.min_neighbors = min_neighbors
@@ -35,6 +44,13 @@ class AnimeFaceDetector:
         _crop_img = cv_img[top:bottom,left:right]
         return _crop_img,crop_area
     
+    def get_offset(self,area):
+        if self.enable_y_offset_ratio:
+            _,_,w,h = area
+            return int(h*self.y_offset_ratio)
+        else:
+            return self.y_offset
+
     def get_padding(self,area):
         if self.enable_padding_ratio:
             _,_,w,h = area
@@ -75,9 +91,11 @@ class AnimeFaceDetector:
     
 def detect(input_directory,output_directory,debug_output_directory,
            padding,enable_padding_ratio,padding_ratio,
+           y_offset, enable_y_offset_ratio, y_offset_ratio,
            detection_output,
            sclae_factor,min_neighbors):
     afd = AnimeFaceDetector(padding,enable_padding_ratio,padding_ratio,
+                            y_offset, enable_y_offset_ratio, y_offset_ratio,
                             sclae_factor=sclae_factor,min_neighbors=min_neighbors,detection_output=detection_output)
 
     os.makedirs(output_directory,exist_ok=True)
