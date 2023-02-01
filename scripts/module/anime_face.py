@@ -93,10 +93,15 @@ def detect(input_directory,output_directory,debug_output_directory,
            padding,enable_padding_ratio,padding_ratio,
            y_offset, enable_y_offset_ratio, y_offset_ratio,
            detection_output,
-           sclae_factor,min_neighbors):
+           sclae_factor,min_neighbors,progress):
+
+    if progress:
+        progress(0, desc="Starting")
+
     afd = AnimeFaceDetector(padding,enable_padding_ratio,padding_ratio,
                             y_offset, enable_y_offset_ratio, y_offset_ratio,
                             sclae_factor=sclae_factor,min_neighbors=min_neighbors,detection_output=detection_output)
+
 
     os.makedirs(output_directory,exist_ok=True)
     if debug_output_directory == None or debug_output_directory == "":
@@ -107,10 +112,16 @@ def detect(input_directory,output_directory,debug_output_directory,
 
     image_path_list = [os.path.join(input_directory,f) for f in os.listdir(input_directory) if any([f.endswith(ext) for ext in image_exts])]
     undetect_images = []
-    for image_path in image_path_list:
-        _detect = afd.detect(image_path,output_directory,debug_output_directory)
-        if not _detect:
-            undetect_images.append(image_path)
+    if progress:
+        for image_path in progress.tqdm(image_path_list, desc="Detecting"):
+            _detect = afd.detect(image_path,output_directory,debug_output_directory)
+            if not _detect:
+                undetect_images.append(image_path)
+    else:
+        for image_path in image_path_list:
+            _detect = afd.detect(image_path,output_directory,debug_output_directory)
+            if not _detect:
+                undetect_images.append(image_path)
         
     results_text = "Face is not dound in imgaes:<br/>" + "<br/>".join(undetect_images)
     return results_text
