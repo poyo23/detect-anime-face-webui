@@ -32,11 +32,14 @@ class AnimeFaceDetector:
         self.cascade = cv2.CascadeClassifier(cascade_path)
 
     
-    def __crop(self,cv_img,face_area,padding):
+    def __crop(self,cv_img,face_area,padding,offsets):
         max_width = cv_img.shape[1]
         max_height = cv_img.shape[0]
         x, y, w, h = face_area
+        x_offset,y_offset = offsets
         bottom,top,right,left = y+h+padding+1,y-padding,x+w+padding+1,x-padding
+        # offset
+        bottom,top,right,left = bottom+x_offset,top+y_offset,right+x_offset,left+y_offset
         
         bottom = min(bottom,max_height)
         top = max(top,0)
@@ -47,11 +50,16 @@ class AnimeFaceDetector:
         return _crop_img,crop_area
     
     def get_offset(self,area):
+        x_offset = 0
+        y_offset = 0
+
         if self.enable_y_offset_ratio:
             _,_,w,h = area
-            return int(h*self.y_offset_ratio)
+            y_offset = int(h*self.y_offset_ratio)
         else:
-            return self.y_offset
+            y_offset = self.y_offset
+
+        return (x_offset,y_offset)
 
     def get_padding(self,area):
         if self.enable_padding_ratio:
@@ -76,7 +84,8 @@ class AnimeFaceDetector:
         # each face
         for i,face_area in enumerate(faces):
             _padding = self.get_padding(face_area)
-            crop_img,crop_area = self.__crop(image,face_area,_padding)
+            _offsets = self.get_offset(face_area)
+            crop_img,crop_area = self.__crop(image,face_area,_padding,_offsets)
             output_path = os.path.join(output_directory,f"{filename}-{i:02}{fileext}")
             cv2.imwrite(output_path, crop_img)
             if self.detection_output:
