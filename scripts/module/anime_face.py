@@ -1,6 +1,6 @@
 import cv2
 import os
-import tqdm
+from tqdm import tqdm
 #import gradio as gr
 
 image_exts = [".png",".jpg",".jpeg"]
