@@ -140,7 +140,7 @@ def detect(input_directory,output_directory,debug_output_directory,
 
     undetect_images = []
     if input_recursive:
-        for image_path in tqdm(recursive.all_files,desc="Detecting"):
+        for image_path in tqdm(recursive.files,desc="Detecting"):
             _image_path = os.path.join(input_directory,image_path)
             if output_recursive:
                 _output_dir = os.path.join(output_directory,os.path.dirname(image_path))
