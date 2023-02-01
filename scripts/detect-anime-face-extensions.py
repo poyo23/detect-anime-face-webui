@@ -1,5 +1,4 @@
 import os
-import argparse
 
 from modules import script_callbacks
 import gradio as gr
@@ -14,12 +13,11 @@ def daf_tab():
 
 
         with gr.Column():
-            if "Progress" in dir(gr):
-                progress = gr.Progress()
-                progress_id = argparse.Namespace(**{"_id":progress})
-            else:
-                print("Progress Bar is not Found.")
-                progress = None
+#            if "Progress" in dir(gr):
+#                progress = gr.Progress()
+#            else:
+#                print("Progress Bar is not Found.")
+#                progress = None
 
             detect_button = gr.Button(value="Detect!", variant="primary")
             padding = gr.Slider(label="padding", minimum=0, maximum=520, step=1, value=20)
@@ -60,7 +58,6 @@ def daf_tab():
                     y_offset, enable_y_offset_ratio, y_offset_ratio,
                     chk_detection_results,
                     sclae_factor,min_neighbors,
-                    progress_id
                    ],
             outputs=[output_html],
             show_progress = True,

@@ -93,7 +93,7 @@ def detect(input_directory,output_directory,debug_output_directory,
            padding,enable_padding_ratio,padding_ratio,
            y_offset, enable_y_offset_ratio, y_offset_ratio,
            detection_output,
-           sclae_factor,min_neighbors,progress):
+           sclae_factor,min_neighbors,progress=None):
 
     if progress:
         progress(0, desc="Starting")
