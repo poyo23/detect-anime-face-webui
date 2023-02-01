@@ -1,5 +1,6 @@
 import cv2
 import os
+import tqdm
 #import gradio as gr
 
 image_exts = [".png",".jpg",".jpeg"]
@@ -119,7 +120,7 @@ def detect(input_directory,output_directory,debug_output_directory,
             if not _detect:
                 undetect_images.append(image_path)
     else:
-        for image_path in image_path_list:
+        for image_path in tqdm(image_path_list):
             _detect = afd.detect(image_path,output_directory,debug_output_directory)
             if not _detect:
                 undetect_images.append(image_path)
