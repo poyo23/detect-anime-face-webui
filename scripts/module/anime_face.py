@@ -1,5 +1,6 @@
 import cv2
 import os
+import gradio as gr
 
 image_exts = [".png",".jpg",".jpeg"]
 
@@ -93,7 +94,7 @@ def detect(input_directory,output_directory,debug_output_directory,
            padding,enable_padding_ratio,padding_ratio,
            y_offset, enable_y_offset_ratio, y_offset_ratio,
            detection_output,
-           sclae_factor,min_neighbors,progress=None):
+           sclae_factor,min_neighbors,progress=gr.Progress()):
 
     if progress:
         progress(0, desc="Starting")
