@@ -16,9 +16,7 @@ def daf_tab():
         with gr.Column():
             if "Progress" in dir(gr):
                 progress = gr.Progress()
-                parser = argparse.ArgumentParser()
-                parser.add_argument('_id', type=int, help='masked(_id)')
-                progress_id = parser.parse_args([progress])
+                progress_id = argparse.Namespace(**{"_id":progress})
             else:
                 print("Progress Bar is not Found.")
                 progress = None
