@@ -16,6 +16,9 @@ def daf_tab():
         with gr.Column():
             detect_button = gr.Button(value="Detect!", variant="primary")
             padding = gr.Slider(label="padding", minimum=0, maximum=520, step=1, value=20)
+            with gr.Row():
+                enable_pad_ratio = gr.Checkbox(label="Enable padding ratio", value=False)
+                padding_ratio = gr.Slider(0.0, 5.0, value=0.5,step=0.01,label="paddingRatio")
             input_directory = gr.Text(label="Input directory")
             output_directory = gr.Text(label="Output directory")
             debug_output_directory = gr.Text(label="Output Detection Results Directory")
@@ -37,7 +40,10 @@ def daf_tab():
         detect_button.click(
             fn=detect,
             # _js="ProgressUpdate",
-            inputs=[input_directory, output_directory,debug_output_directory,padding,chk_detection_results,sclae_factor,min_neighbors],
+            inputs=[input_directory, output_directory,debug_output_directory,
+                    padding,enable_pad_ratio,padding_ratio,
+                    chk_detection_results,
+                    sclae_factor,min_neighbors],
             outputs=[output_html],
             show_progress = True,
         )

@@ -4,9 +4,11 @@ import os
 image_exts = [".png",".jpg",".jpeg"]
 
 class AnimeFaceDetector:
-    def __init__(self,padding,sclae_factor=1.1,min_neighbors=5,detection_output=False):
+    def __init__(self,padding,enable_padding_ratio,padding_ratio,sclae_factor=1.1,min_neighbors=5,detection_output=False):
         # processing arguments
         self.padding=padding
+        self.enable_padding_ratio = enable_padding_ratio
+        self.padding_ratio = padding_ratio
         self.detection_output=detection_output # debug option
         self.sclae_factor = sclae_factor
         self.min_neighbors = min_neighbors
@@ -33,6 +35,14 @@ class AnimeFaceDetector:
         _crop_img = cv_img[top:bottom,left:right]
         return _crop_img,crop_area
     
+    def get_padding(self,area):
+        if self.enable_padding_ratio:
+            _,_,w,h = area
+            return int(w*self.padding_ratio)
+        else:
+            return self.padding
+
+
     def detect(self,image_path,output_directory,debug_output_directory):
         filename,fileext = os.path.splitext(os.path.basename(image_path))
         image = cv2.imread(image_path, cv2.IMREAD_COLOR)
@@ -47,7 +57,8 @@ class AnimeFaceDetector:
             detect_image = image.copy()
         # each face
         for i,face_area in enumerate(faces):
-            crop_img,crop_area = self.__crop(image,face_area,self.padding)
+            _padding = self.get_padding(face_area)
+            crop_img,crop_area = self.__crop(image,face_area,_padding)
             output_path = os.path.join(output_directory,f"{filename}-{i:02}{fileext}")
             cv2.imwrite(output_path, crop_img)
             if self.detection_output:
@@ -63,9 +74,11 @@ class AnimeFaceDetector:
 
     
 def detect(input_directory,output_directory,debug_output_directory,
-           padding,detection_output,
+           padding,enable_padding_ratio,padding_ratio,
+           detection_output,
            sclae_factor,min_neighbors):
-    afd = AnimeFaceDetector(padding,sclae_factor=sclae_factor,min_neighbors=min_neighbors,detection_output=detection_output)
+    afd = AnimeFaceDetector(padding,enable_padding_ratio,padding_ratio,
+                            sclae_factor=sclae_factor,min_neighbors=min_neighbors,detection_output=detection_output)
 
     os.makedirs(output_directory,exist_ok=True)
     if debug_output_directory == None or debug_output_directory == "":
