@@ -1,6 +1,5 @@
 import os
-
-
+import argparse
 
 from modules import script_callbacks
 import gradio as gr
@@ -17,6 +16,9 @@ def daf_tab():
         with gr.Column():
             if "Progress" in dir(gr):
                 progress = gr.Progress()
+                parser = argparse.ArgumentParser()
+                parser.add_argument('_id', type=int, help='masked(_id)')
+                progress_id = parser.parse_args([progress])
             else:
                 print("Progress Bar is not Found.")
                 progress = None
@@ -60,7 +62,7 @@ def daf_tab():
                     y_offset, enable_y_offset_ratio, y_offset_ratio,
                     chk_detection_results,
                     sclae_factor,min_neighbors,
-                    progress
+                    progress_id
                    ],
             outputs=[output_html],
             show_progress = True,
