@@ -73,7 +73,7 @@ def daf_tab():
                     sclae_factor,min_neighbors,
                    ] ,
             outputs=[output_html],
-            show_progress = True,
+#            show_progress = True,
         )
             
     return (main_block, "Detect Anime Face", "detect_anime_face"),
