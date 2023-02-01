@@ -51,20 +51,9 @@ def daf_tab():
             # progress_bar = gr.HTML(elem_id=f'progress_bar')
 
 
-        def detect_wrapper(input_directory, output_directory,debug_output_directory,
-                    padding,enable_pad_ratio,padding_ratio,
-                    y_offset, enable_y_offset_ratio, y_offset_ratio,
-                    chk_detection_results,
-                    sclae_factor,min_neighbors,progress=gr.Progress()):
-            detect(input_directory, output_directory,debug_output_directory,
-                    padding,enable_pad_ratio,padding_ratio,
-                    y_offset, enable_y_offset_ratio, y_offset_ratio,
-                    chk_detection_results,
-                    sclae_factor,min_neighbors,progress)
 
         detect_button.click(
-            # fn=detect,
-            fn=detect_wrapper,
+            fn=detect,
             # _js="ProgressUpdate",
             inputs=[input_directory, output_directory,debug_output_directory,
                     padding,enable_pad_ratio,padding_ratio,
