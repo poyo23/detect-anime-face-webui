@@ -39,7 +39,7 @@ class AnimeFaceDetector:
         x_offset,y_offset = offsets
         bottom,top,right,left = y+h+padding+1,y-padding,x+w+padding+1,x-padding
         # offset
-        bottom,top,right,left = bottom+x_offset,top+y_offset,right+x_offset,left+y_offset
+        bottom,top,right,left = bottom+y_offset,top+y_offset,right+x_offset,left+x_offset
         
         bottom = min(bottom,max_height)
         top = max(top,0)
