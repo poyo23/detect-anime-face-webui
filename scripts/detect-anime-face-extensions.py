@@ -31,6 +31,10 @@ def daf_tab():
                 enable_y_offset_ratio = gr.Checkbox(label="Enable ratio (offset y axis)", value=False)
                 y_offset_ratio = gr.Slider(-2.0, 2.0, value=0.0,step=0.01,label="offsetRatio_Y")
 
+            gr.HTML(value="ディレクトリを再帰的に見るか指定できます。出力先も入力のディレクトリを再現することができます。")
+            with gr.Row():
+                chk_recursive_input_dir = gr.Checkbox(label="Input Directory recursively.", value=False)
+                chk_recursive_output_dir = gr.Checkbox(label="Output Directory recursively.(Reuqire Input Recursive)", value=False)
 
             input_directory = gr.Text(label="Input directory")
             output_directory = gr.Text(label="Output directory")
@@ -56,6 +60,7 @@ def daf_tab():
             fn=detect,
             # _js="ProgressUpdate",
             inputs=[input_directory, output_directory,debug_output_directory,
+                    chk_recursive_input_dir,chk_recursive_output_dir,
                     padding,enable_pad_ratio,padding_ratio,
                     y_offset, enable_y_offset_ratio, y_offset_ratio,
                     chk_detection_results,

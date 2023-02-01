@@ -1,6 +1,7 @@
 import cv2
 import os
 from tqdm import tqdm
+import argparse
 #import gradio as gr
 
 image_exts = [".png",".jpg",".jpeg"]
@@ -97,43 +98,95 @@ class AnimeFaceDetector:
             cv2.imwrite(output_path, detect_image)
 
         return len(faces) != 0
-    
 
-    
+
+
+
+
 def detect(input_directory,output_directory,debug_output_directory,
+           input_recursive,output_recursive,
            padding,enable_padding_ratio,padding_ratio,
            y_offset, enable_y_offset_ratio, y_offset_ratio,
            detection_output,
-           sclae_factor,min_neighbors,progress=None):
+           sclae_factor,min_neighbors):
 
-    if progress:
-        progress(0, desc="Starting")
+    if output_directory == "" or output_directory is None:
+        return "Output directory is not specified..."
+
+    if output_recursive and not input_recursive:
+        return "To make the output destination recursive, the input recursive must be enabled."
+    
 
     afd = AnimeFaceDetector(padding,enable_padding_ratio,padding_ratio,
                             y_offset, enable_y_offset_ratio, y_offset_ratio,
                             sclae_factor=sclae_factor,min_neighbors=min_neighbors,detection_output=detection_output)
 
+    
 
-    os.makedirs(output_directory,exist_ok=True)
+    if input_recursive:
+        recursive = search_directory(input_directory)
+
+    if output_recursive:
+        # 再帰的にディレクトリを作っておく
+        for d in recursive.sub_dirs:
+            os.makedirs(os.path.join(output_directory,d),exist_ok=True)
+    else:
+        os.makedirs(output_directory,exist_ok=True)
+
     if debug_output_directory == None or debug_output_directory == "":
         debug_output_directory = output_directory
     else:
         os.makedirs(debug_output_directory,exist_ok=True)
 
-
-    image_path_list = [os.path.join(input_directory,f) for f in os.listdir(input_directory) if any([f.endswith(ext) for ext in image_exts])]
     undetect_images = []
-    if progress:
-        for image_path in progress.tqdm(image_path_list, desc="Detecting"):
-            _detect = afd.detect(image_path,output_directory,debug_output_directory)
+    if input_recursive:
+        for image_path in tqdm(recursive.all_files,desc="Detecting"):
+            _image_path = os.path.join(input_directory,image_path)
+            if output_recursive:
+                _output_dir = os.path.join(output_directory,os.path.dirname(image_path))
+                _debug_output_dir = os.path.join(debug_output_directory,os.path.dirname(image_path))
+            else:
+                _output_dir = output_directory
+                _debug_output_dir = debug_output_directory
+            _detect = afd.detect(_image_path,_output_dir,_debug_output_dir)
             if not _detect:
                 undetect_images.append(image_path)
     else:
-        for image_path in tqdm(image_path_list):
+        image_path_list = [os.path.join(input_directory,f) for f in os.listdir(input_directory) if any([f.endswith(ext) for ext in image_exts])]
+        for image_path in tqdm(image_path_list,desc="Detecting"):
             _detect = afd.detect(image_path,output_directory,debug_output_directory)
             if not _detect:
                 undetect_images.append(image_path)
         
     results_text = "Face is not dound in imgaes:<br/>" + "<br/>".join(undetect_images)
     return results_text
+
+
+
+
+def search_directory(input_dir):
+    dirs = [""]
+    searched_directories = []
+    all_files = []
+    pbar = tqdm(desc="file searching")
+    while len(dirs) > 0:
+        d = dirs.pop()
+        if ".ipynb_checkpoints" in d:
+            continue
+        searching_dir = os.path.join(input_dir,d)
+        searched_directories.append(d)
+        _l = [os.path.join(d,p) for p in os.listdir(searching_dir)]
+        dir_list = [p for p in _l if os.path.isdir(os.path.join(input_dir,p))]
+        file_list = [p for p in _l if os.path.isfile(os.path.join(input_dir,p))]
+
+        dirs += dir_list
+        all_files += file_list
+        pbar.update(1)
+    pbar.close()
+
+    return argparse.Namespace(files=all_files,sub_dirs=searched_directories)
+
+
+
+
 
